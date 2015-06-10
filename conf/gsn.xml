@@ -12,7 +12,7 @@
    <ssl-key-store-password>changeit</ssl-key-store-password>
    <ssl-key-password>changeit</ssl-key-password>
    
-   <!-- Uncomment to use HTTPS connector only ->>
+   <!-- Uncomment to use HTTPS connector only -->
    <!-- <ssl-only>true</ssl-only> -->
 
 <!-- <access-control>true</access-control> -->
