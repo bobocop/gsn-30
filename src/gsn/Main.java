@@ -95,8 +95,12 @@ public final class Main {
 		try {
 			controlSocket = new GSNController(null, gsnControllerPort);
 			containerConfig = loadContainerConfiguration();
-			updateSplashIfNeeded(new String[] {"GSN is starting at port:"+containerConfig.getContainerPort(),"All GSN logs are available at: logs/gsn.log"});
-			System.out.println("Global Sensor Networks (GSN) is Starting on port "+containerConfig.getContainerPort()+"...");
+			String gsnStartMsg = "GSN is starting at port "+containerConfig.getContainerPort();
+			if (containerConfig.getSSLOnly() && containerConfig.getSSLPort() > 0) {
+				gsnStartMsg = "GSN is starting at port "+containerConfig.getSSLPort();
+			}
+			updateSplashIfNeeded(new String[] {gsnStartMsg + ",","All GSN logs are available at: logs/gsn.log"});
+			System.out.println(gsnStartMsg);
             System.out.println("The logs of GSN server are available in logs/gsn.log file.");
 			System.out.println("To Stop GSN execute the gsn-stop script.");
 		} catch ( FileNotFoundException e ) {
@@ -370,6 +374,8 @@ public final class Main {
         }
         else if (getContainerConfig().isAcEnabled())
             logger.error("SSL MUST be configured in the gsn.xml file when Access Control is enabled !");
+        else if (getContainerConfig().getSSLOnly())
+        	logger.error("Unable to create secure connector, SSL properties not defined! Will use Basic HTTP on port " + port + ".");
         
         AbstractConnector connector=new SelectChannelConnector (); // before was connector//new SocketConnector ();//using basic connector for windows bug; Fast option=>SelectChannelConnector
         connector.setPort ( port );
@@ -379,8 +385,10 @@ public final class Main {
 
 		if (sslSocketConnector==null)
 			server.setConnectors ( new Connector [ ] { connector } );
+		else if (getContainerConfig().getSSLOnly())
+			server.setConnectors ( new Connector [ ] { sslSocketConnector } );
 		else
-			server.setConnectors ( new Connector [ ] { connector,sslSocketConnector } );
+			server.setConnectors ( new Connector [ ] { connector, sslSocketConnector } );
 
 		WebAppContext webAppContext = new WebAppContext(contexts, DEFAULT_WEB_APP_PATH ,"/");
 

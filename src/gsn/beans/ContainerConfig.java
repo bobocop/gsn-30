@@ -60,6 +60,8 @@ public class ContainerConfig {
 	private int                           sslPort                           = -1;
 
     private boolean                       acEnabled                     = false;
+    
+    private boolean						  sslOnly						= false;
 
 	private String sslKeyStorePassword;
 
@@ -443,6 +445,11 @@ public class ContainerConfig {
 	public int getSSLPort(){
 		return sslPort;
 	}
+	
+	public boolean getSSLOnly(){
+		return sslOnly;
+	}
+	
 	public String getSSLKeyStorePassword(){
 		return sslKeyStorePassword == null ? DEFAULT_SSL_KEYSTORE_PWD : sslKeyStorePassword;
 	}
