@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
 
 /**
  * This class generates Virtual sensor description file for GSN(Global Sensor
- * Networks) system. It was created following the DTD(Document Type Definition)
+ * Networks) system. It was created following the DTD (Document Type Definition)
  * that is available on this link https://github.com/LSIR/gsn/blob/documentations/book-of-gsn/chapters/ch-quickref/figures/vs-quick-ref.pdf?raw=true
  * 
  * @author Luka Dulčić
@@ -33,7 +33,7 @@ public class VirtualSensorDescriptionFile {
 
 	private Element rootElement;//<virtual-sensor>
 
-	private Element processingClass;// parent
+	private Element processingClass;
 	private Element initParams;
 	private Element uniqueTimestamps;
 	private Element outputStructure;
@@ -84,7 +84,12 @@ public class VirtualSensorDescriptionFile {
 		fileUploaded = true;
 	}
 	
-	//implement complete validation when you catch time for it
+	/**
+	 * Loads VSD from file given in <code>vsd</code>.
+	 * 
+	 * @param vsd virtual sensor description file
+	 * @throws VirtualSensorException if <code>vsd</code> is not valid VSD
+	 */
 	private void parseVSDfile(File vsd) throws VirtualSensorException {
 		//<virtual-sensor>
 		rootElement = virtualSensor.getDocumentElement();
@@ -220,14 +225,29 @@ public class VirtualSensorDescriptionFile {
 	
 	// ROOT TAG ATTRIBUTES
 
+	/**
+	 * Sets virtual sensor name.
+	 * 
+	 * @param name virtual sensor name
+	 */
 	public void setVSName(String name) {
 		rootElement.setAttribute("name", name);
 	}
 	
+	/**
+	 * Returns the name of virtual sensor.
+	 * 
+	 * @return name of virtual sensor.
+	 */
 	public String getVSName() {
 		return rootElement.getAttribute("name");
 	}
 
+	/**
+	 * Sets virtual sensor <code>priority</code> attribute.
+	 * 
+	 * @param priority value of <code>priority</code> attribute
+	 */
 	public void setVSPriority(int priority) {
 		int acceptablePriority;
 		if (priority < 0) {
@@ -241,6 +261,11 @@ public class VirtualSensorDescriptionFile {
 				String.valueOf(acceptablePriority));
 	}
 	
+	/**
+	 * Returns value of virtual sensor <code>priority</code> attribute.
+	 * 
+	 * @return value of priority attribute
+	 */
 	public Integer getVSPriority() {
 		String tmp = rootElement.getAttribute("priority");
 		if(!tmp.isEmpty()) {
@@ -250,33 +275,69 @@ public class VirtualSensorDescriptionFile {
 		}
 	}
 
+	/**
+	 * Sets virtual sensor <code>protected</code> attribute.
+	 * 
+	 * @param value value of protected attribute
+	 */
 	public void setVSProtectedProperty(String value) {
 		rootElement.setAttribute("protected", value);
 	}
 	
+	/**
+	 * Returns value of virtual sensor <code>protected</code> attribute.
+	 * 
+	 * @return value of protected attribute
+	 */
 	public String getVSProtectedProperty() {
 		return rootElement.getAttribute("protected");
 	}
 
+	/**
+	 * Sets virtual sensor <code>publish-to-microsoft-research-map</code> attribute.
+	 * 
+	 * @param value value of <code>publish-to-microsoft-research-map</code> attribute
+	 */
 	public void setPublishToMicrosoftResearchMap(String value) {
 		rootElement.setAttribute("publish-to-microsoft-research-map",
 				value);
 	}
 	
+	/**
+	 * Returns value of virtual sensor <code>publish-to-microsoft-research-map</code> attribute.
+	 * 
+	 * @return value of virtual sensor <code>publish-to-microsoft-research-map</code> attribute
+	 */
 	public String getPublishToMicrosoftResarchMap() {
 		return rootElement.getAttribute("publish-to-microsoft-research-map");
 	}
 	
+	/**
+	 * Sets virtual sensor <code>timezone</code> attribute.
+	 * 
+	 * @param timezone value of <code>timezone</code> attribute
+	 */
 	public void setTimezone(String timezone) {
 		rootElement.setAttribute("timezone", timezone);
 	}
 	
+	/**
+	 * Returns value of virtual sensor <code>timezone</code> attribute.
+	 * 
+	 * @return value of virtual sensor <code>timezone</code> attribute
+	 */
 	public String getTimezone() {
 		return rootElement.getAttribute("timezone");
 	}
 
 	// PROCESSING-CLASS
 
+	/**
+	 * Sets value of <code>&ltclass-name&gt</code> element in VSD
+	 * as a child of <code>&ltprocessing-class&gt</code> element.
+	 * 
+	 * @param className value of <code>&ltclass-name&gt</code> element
+	 */
 	public void setProcessingClass(String className) {
 		if (processingClass == null)
 			processingClass = virtualSensor
@@ -286,9 +347,26 @@ public class VirtualSensorDescriptionFile {
 		element.setTextContent(className);
 		processingClass.appendChild(element);
 	}
+	
+	/**
+	 * Removes <code>&ltprocessing-class&gt</code> element from VSD.
+	 */
+	public void removeProccesingClass() {
+		if(processingClass != null) {
+			processingClass = null;
+		}
+	}
 
 	// INIT-PARAMS
 
+	/**
+	 * Adds <code>&ltparam name="<i>name</i>"&gt<i>value</i>&ltparam&gt</code> element
+	 * as a child to <code>&ltinit-params&gt</code> element.
+	 * 
+	 * @param param name of parameter
+	 * @param value value of parameter
+	 * @throws VirtualSensorException if <code>&ltprocessing-class&gt</code> element doesn't exist
+	 */
 	public void addInitParam(String param, String value) throws VirtualSensorException {
 		if (processingClass == null)
 			throw new VirtualSensorException(
@@ -304,7 +382,12 @@ public class VirtualSensorDescriptionFile {
 		initParams.appendChild(element);
 	}
 	
-	//return null if parameter doesn't exists
+	/**
+	 * Returns value of parameter.
+	 * 
+	 * @param paramName name of parameter
+	 * @return value if parameter exists <code>null</code> otherwise
+	 */
 	public String getInitParam(String paramName) {
 		if(processingClass == null || initParams == null) {
 			return null;
@@ -326,6 +409,12 @@ public class VirtualSensorDescriptionFile {
 
 	// UNIQUE-TIMESTAMPS
 
+	/**
+	 * Sets value of <code>&ltunique-timestamps&gt</code> element.
+	 * 
+	 * @param value value of <code>&ltunique-timestamps&gt</code> element 
+	 * @throws VirtualSensorException if <code>&ltprocessing-class&gt</code> element doesn't exist
+	 */
 	public void setUniqueTimestamps(boolean value) throws VirtualSensorException {
 		if (processingClass == null)
 			throw new VirtualSensorException(
@@ -337,9 +426,35 @@ public class VirtualSensorDescriptionFile {
 		}
 		uniqueTimestamps.setTextContent(String.valueOf(value));
 	}
+	
+	/**
+	 * Returns value of <code>&ltunique-timestamps&gt</code> element.
+	 * 
+	 * @return value of <code>&ltunique-timestamps&gt</code> element as a String 
+	 * 	   representing boolean value. If this element doesn't exist <code>null</code>
+	 * 	   will be returned
+	 * @throws VirtualSensorException if <code>&ltprocessing-class&gt</code> element doesn't exist
+	 */
+	public String getUniqueTimestamps() throws VirtualSensorException {
+		if (processingClass == null)
+			throw new VirtualSensorException(
+					"You must set processing class before unique-timestamps");
+		if(uniqueTimestamps != null) {
+			return uniqueTimestamps.getTextContent();
+		}
+		return null;
+	}
 
 	// OUTPUT STRUCTURE
 
+	/**
+	 * Adds <code>&ltfield name="<i>name</i>" type="<i>type</i>"/&gt</code> element
+	 * as child to <code>&ltoutput-structure&gt</code> element.
+	 * 
+	 * @param name name of output structure field
+	 * @param type type of output structure field
+	 * @throws VirtualSensorException if <code>&ltprocessing-class&gt</code> element doesn't exist 
+	 */
 	public void addOutputStructureField(String name, String type) throws VirtualSensorException {
 		if (processingClass == null)
 			throw new VirtualSensorException(
@@ -352,11 +467,19 @@ public class VirtualSensorDescriptionFile {
 
 		Element element = virtualSensor.createElement("field");
 		element.setAttribute("name", name);
-		element.setAttribute("type", type);// implementirati provjeru za
-							// "type"
+		element.setAttribute("type", type);// implementirati provjeru za "type"
 		outputStructure.appendChild(element);
 	}
-
+	
+	/**
+	 * Adds <code>&ltfield name="<i>name</i>" type="<i>type</i>"&gt<i>description</i>&ltfield&gt</code> element
+	 * as child to <code>&ltoutput-structure&gt</code> element.
+	 * 
+	 * @param name name of output structure field
+	 * @param type type of output structure field
+	 * @param description short description of <code>&ltfield&gt</code> element
+	 * @throws VirtualSensorException if <code>&ltprocessing-class&gt</code> element doesn't exist
+	 */
 	public void addOutputStructureField(String name, String type, String description) throws VirtualSensorException {
 		if (processingClass == null)
 			throw new VirtualSensorException(
@@ -374,9 +497,59 @@ public class VirtualSensorDescriptionFile {
 		element.setTextContent(description);
 		outputStructure.appendChild(element);
 	}
+	
+	/**
+	 * Removes <code>&ltfield&gt</code> element with given <code>name</code> attribute.
+	 * 
+	 * @param name value of <code>name</code> attribute 
+	 */
+	public void removeOutputStructureField(String name) {
+		if(outputStructure != null) {
+			NodeList children = outputStructure.getChildNodes();
+			Element element = null;
+			for (int i = 0; i < children.getLength(); i++) {
+				element = (Element)children.item(i);
+				if(element.getAttribute("name").equals(name)) {
+					outputStructure.removeChild(element);
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Returns value of <code>type</code> attribute from <code>&ltfield&gt</code> element
+	 * with given <code>name</code> attribute.
+	 * 
+	 * @param name value of <code>name</code> attribute
+	 * @return value of <code>type</code> attribute if field exists <code>null</code> otherwise
+	 * @throws VirtualSensorException if <code>&ltprocessing-class&gt</code> element doesn't exist 
+	 */
+	public String getOutputStructureFieldType(String name) throws VirtualSensorException {
+		if (processingClass == null)
+			throw new VirtualSensorException(
+					"You must set processing class before output-structure.");
+		if(outputStructure != null) {
+			NodeList children = outputStructure.getChildNodes();
+			Element element = null;
+			for (int i = 0; i < children.getLength(); i++) {
+				element = (Element)children.item(i);
+				if(element.getAttribute("name").equals(name)) {
+					return element.getAttribute("type");
+				}
+			}
+		}
+		return null;
+	}
 
 	// OUTPUT-SPECIFICATION
 
+	/**
+	 * Sets value of <code>rate</code> attribute in <code>&ltoutput-specification&gt</code> element.
+	 * 
+	 * @param rate value of <code>rate</code> attribute
+	 * @throws VirtualSensorException if <code>&ltprocessing-class&gt</code> element doesn't exist
+	 */
 	public void setOutputSpecificationRate(int rate) throws VirtualSensorException {
 		if (processingClass == null)
 			throw new VirtualSensorException(
@@ -388,9 +561,30 @@ public class VirtualSensorDescriptionFile {
 		}
 		outputSpecifications.setAttribute("rate", String.valueOf(rate));
 	}
+	
+	/**
+	 * Returns value of <code>rate</code> in <code>&ltoutput-specification&gt</code> element.
+	 * 
+	 * @return value of <code>rate</code> attribute if attribute exists <code>null</code> otherwise
+	 * @throws VirtualSensorException if <code>&ltprocessing-class&gt</code> element doesn't exist
+	 */
+	public String getOutputSpecificationRate() throws VirtualSensorException {
+		if (processingClass == null)
+			throw new VirtualSensorException(
+					"You must set processing class before output-specification.");
+		if(outputSpecifications != null) {
+			return outputSpecifications.getAttribute("rate");
+		}
+		return null;
+	}
 
 	// WEB-INPUT
 
+	/**
+	 * Adds <code>&ltweb-input password="<i>password</i>"<>
+	 * 
+	 * @throws VirtualSensorException if <code>&ltprocessing-class&gt</code> element doesn't exist
+	 */
 	public void addWebInput() throws VirtualSensorException {
 		if (processingClass == null)
 			throw new VirtualSensorException(
@@ -462,8 +656,8 @@ public class VirtualSensorDescriptionFile {
 	// LIFE-CYCLE
 
 	/**
-	 * Sets "pool-size" attribute of <code>life-cycle<code> tag.
-	 * Life-cycle is deprecated an not used by GSN anymore
+	 * Sets <code>pool-size</code> attribute of <code>&ltlife-cycle&gt<code> element.
+	 * Life-cycle is deprecated and not used by GSN anymore.
 	 * 
 	 * @param poolSize
 	 */

@@ -35,9 +35,12 @@ public class MobileService extends AbstractVirtualSensor {
 	private static final String DEFAULT_DEVICE_ID_DELIMITER = "android_id";
 	
 	private static final String DEFAULT_BATTERY_FILE_NAME = "MobileBatteryVS";
+	private static final String DEFAULT_BATTERY_CONNECTED_FILE_NAME = "MobileBatteryConnectedVS";
+	private static final String DEFAULT_BATTERY_OK_FILE_NAME = "MobileBatteryLevelVS";
 	private static final String DEFAULT_LOCATION_FILE_NAME = "MobileLocationVS";
 	private static final String DEFAULT_SIGNAL_FILE_NAME = "MobileSignalVS";
-	private static final String DEFAULT_WIFI_FILE_NAME = "MobileWiFiVS";
+	private static final String DEFAULT_WIFI_FILE_NAME = "MobileWifiVS";
+	private static final String DEFAULT_NETWORK_FILE_NAME = "MobileNetworkVS";
 	private static final String DEFAULT_SENSORS_FILE_NAME = "MobileSensorsVS";
 	private static final String DEFAULT_ORIENTATION_FILE_NAME = "MobileOrientationVS";
 	private static final String DEFAULT_ACCELERATION_FILE_NAME = "MobileAccelerationVS";
@@ -50,6 +53,8 @@ public class MobileService extends AbstractVirtualSensor {
 	private static final String DEFAULT_BLUETOOTH_GARMIN_FILE_NAME = "MobileBluetoothGarminVS";
 	
 	private static final String DEFAULT_BATTERY_DELIMITER = "BATTERY_LEVEL";
+	private static final String DEFAULT_BATTERY_CONNECT_DELIMITER = "BATTERY_CONNECT";
+	private static final String DEFAULT_BATTERY_OK_DELIMITER = "BATTERY_OK";
 	private static final String DEFAULT_LOCATION_DELIMITER = "LOCATION";
 	private static final String DEFAULT_SIGNAL_DELIMITER = "SIGNAL";
 	private static final String DEFAULT_NETWORK_DELIMITER = "NETWORK";
@@ -97,9 +102,12 @@ public class MobileService extends AbstractVirtualSensor {
 	
 	//file names
 	private String batteryFileName;
+	private String batteryConnectFileName;
+	private String batteryLevelFileName;
 	private String locationFileName;
 	private String signalFileName;
 	private String wifiFileName;
+	private String networkFileName;
 	private String sensorsFileName;
 	private String orientationFileName;
 	private String accelerationFileName;
@@ -113,6 +121,8 @@ public class MobileService extends AbstractVirtualSensor {
 	
 	//delimiters
 	private String batteryDelimiter;
+	private String batteryConnectDelimiter;
+	private String batteryLevelDelimiter;
 	private String locationDelimiter;
 	private String signalDelimiter;
 	private String networkDelimiter;
@@ -131,9 +141,12 @@ public class MobileService extends AbstractVirtualSensor {
 	
 	//whether to generate certain VS or not
 	private boolean generateBattery;
+	private boolean generateBatteryConnect;
+	private boolean generateBatteryLevel;
 	private boolean generateLocation;
 	private boolean generateSignal;
 	private boolean generateWifi;
+	private boolean generateNetwork;
 	private boolean generateSensors;
 	private boolean generateOrientation;
 	private boolean generateAcceleration;
@@ -244,6 +257,26 @@ public class MobileService extends AbstractVirtualSensor {
 			generateBattery = false;
 		}
 		
+		//BATTERY CONNECTED FILE NAME
+		tmp = initParams.get("battery-connected-file-name");
+		if(tmp != null) {
+			tmp = tmp.trim();
+			batteryConnectFileName = tmp.isEmpty() ? DEFAULT_BATTERY_CONNECTED_FILE_NAME : tmp;
+			generateBatteryConnect = true;
+		} else {
+			generateBatteryConnect = false;
+		}
+		
+		//BATTERY LEVEL FILE NAME
+		tmp = initParams.get("battery-level-file-name");
+		if(tmp != null) {
+			tmp = tmp.trim();
+			batteryLevelFileName = tmp.isEmpty() ? DEFAULT_BATTERY_OK_FILE_NAME : tmp;
+			generateBatteryLevel = true;
+		} else {
+			generateBatteryLevel = false;
+		}
+		
 		//LOCATION FILE NAME
 		tmp = initParams.get("location-file-name");
 		if(tmp != null) {
@@ -272,6 +305,16 @@ public class MobileService extends AbstractVirtualSensor {
 			generateWifi = true;
 		} else {
 			generateWifi = false;
+		}
+		
+		//NETWORK FILE NAME
+		tmp = initParams.get("network-file-name");
+		if(tmp != null) {
+			tmp = tmp.trim();
+			networkFileName = tmp.isEmpty() ? DEFAULT_NETWORK_FILE_NAME : tmp;
+			generateNetwork = true;
+		} else {
+			generateNetwork = false;
 		}
 		
 		//SENSORS FILE NAME
@@ -384,6 +427,24 @@ public class MobileService extends AbstractVirtualSensor {
 			batteryDelimiter = tmp.isEmpty() ? DEFAULT_BATTERY_DELIMITER : tmp;
 		} else {
 			batteryDelimiter = DEFAULT_BATTERY_DELIMITER;
+		}
+		
+		// BATTERY CONNECTED DELIMITER
+		tmp = initParams.get("battery-connected-delimiter");
+		if(tmp != null) {
+			tmp = tmp.trim();
+			batteryConnectDelimiter = tmp.isEmpty() ? DEFAULT_BATTERY_CONNECT_DELIMITER : tmp;
+		} else {
+			batteryConnectDelimiter = DEFAULT_BATTERY_CONNECT_DELIMITER;
+		}
+		
+		// BATTERY LEVEL DELIMITER
+		tmp = initParams.get("battery-level-delimiter");
+		if(tmp != null) {
+			tmp = tmp.trim();
+			batteryLevelDelimiter = tmp.isEmpty() ? DEFAULT_BATTERY_OK_DELIMITER : tmp;
+		} else {
+			batteryLevelDelimiter = DEFAULT_BATTERY_OK_DELIMITER;
 		}
 		
 		// LOCATION DELIMITER
@@ -694,6 +755,24 @@ public class MobileService extends AbstractVirtualSensor {
 				pathsToFiles.add(fileName);
 			}
 			
+			//battery connected
+			if(generateBatteryConnect) {
+				tmp = generateMobileBatteryConnectedVS(deviceId);
+				if(tmp == null) throw new Exception();
+				fileName = pathToVirtualSensorsFolder + batteryConnectFileName + "_" + deviceLabel + ".xml";
+				tmp.writeToFile(new File(fileName));
+				pathsToFiles.add(fileName);
+			}
+			
+			//battery level
+			if(generateBatteryLevel) {
+				tmp = generateMobileBatteryLevelVS(deviceId);
+				if(tmp == null) throw new Exception();
+				fileName = pathToVirtualSensorsFolder + batteryLevelFileName + "_" + deviceLabel + ".xml";
+				tmp.writeToFile(new File(fileName));
+				pathsToFiles.add(fileName);
+			}
+			
 			//location
 			if(generateLocation) {
 				tmp = generateMobileLocationVS(deviceId);
@@ -717,6 +796,15 @@ public class MobileService extends AbstractVirtualSensor {
 				tmp = generateMobileWiFiVS(deviceId);
 				if(tmp == null) throw new Exception();
 				fileName = pathToVirtualSensorsFolder + wifiFileName + "_" + deviceLabel + ".xml";
+				tmp.writeToFile(new File(fileName));
+				pathsToFiles.add(fileName);
+			}
+			
+			//network
+			if(generateNetwork) {
+				tmp = generateMobileNetworkVS(deviceId);
+				if(tmp == null) throw new Exception();
+				fileName = pathToVirtualSensorsFolder + networkFileName + "_" + deviceLabel + ".xml";
 				tmp.writeToFile(new File(fileName));
 				pathsToFiles.add(fileName);
 			}
@@ -855,6 +943,66 @@ public class MobileService extends AbstractVirtualSensor {
 		}
 	}
 	
+	private VirtualSensorDescriptionFile generateMobileBatteryConnectedVS(String deviceId) {
+		String vsName = null;
+		if(currentDeviceLabel == null || currentDeviceLabel.isEmpty()) {
+			vsName = deviceId;
+		} else {
+			vsName = currentDeviceLabel;
+		}
+		
+		try {
+			VirtualSensorDescriptionFile vs = new VirtualSensorDescriptionFile();
+			vs.setVSName("mobilebatteryconn_" + vsName);
+			vs.setProcessingClass("hr.fer.rasip.mobile.MobileBatteryConnected");
+			vs.addInitParam("delimiter", batteryConnectDelimiter);
+			vs.addInitParam("device-id", deviceId);
+			vs.addInitParam("device-id-delimiter", deviceIdDelimiter);
+			vs.addOutputStructureField("battery_connected", "int");
+			vs.setHistorySize("100");
+			vs.addStream("stream1");
+			vs.addSource("stream1", "mobile");
+			vs.setSamplingRate("stream1", "mobile", 1);
+			vs.setStorageSize("stream1", "mobile", 1);
+			vs.addAddress("stream1", "mobile", "local");
+			vs.addAddressPredicate("stream1", "mobile", "local", "name", "mobile_service");
+			return vs;
+		} catch (Exception e) {
+			logger.error("Error while generating mobile battery connected VSD: " + e);
+			return null;
+		}
+	}
+	
+	private VirtualSensorDescriptionFile generateMobileBatteryLevelVS(String deviceId) {
+		String vsName = null;
+		if(currentDeviceLabel == null || currentDeviceLabel.isEmpty()) {
+			vsName = deviceId;
+		} else {
+			vsName = currentDeviceLabel;
+		}
+		
+		try {
+			VirtualSensorDescriptionFile vs = new VirtualSensorDescriptionFile();
+			vs.setVSName("mobilebatterylevel_" + vsName);
+			vs.setProcessingClass("hr.fer.rasip.mobile.MobileBatteryLevel");
+			vs.addInitParam("delimiter", batteryLevelDelimiter);
+			vs.addInitParam("device-id", deviceId);
+			vs.addInitParam("device-id-delimiter", deviceIdDelimiter);
+			vs.addOutputStructureField("battery_level_ok", "int");
+			vs.setHistorySize("100");
+			vs.addStream("stream1");
+			vs.addSource("stream1", "mobile");
+			vs.setSamplingRate("stream1", "mobile", 1);
+			vs.setStorageSize("stream1", "mobile", 1);
+			vs.addAddress("stream1", "mobile", "local");
+			vs.addAddressPredicate("stream1", "mobile", "local", "name", "mobile_service");
+			return vs;
+		} catch (Exception e) {
+			logger.error("Error while generating mobile battery level VSD: " + e);
+			return null;
+		}
+	}
+	
 	private VirtualSensorDescriptionFile generateMobileLocationVS(String deviceId) {
 		String vsName = null;
 		if(currentDeviceLabel == null || currentDeviceLabel.isEmpty()) {
@@ -948,6 +1096,38 @@ public class MobileService extends AbstractVirtualSensor {
 			return vs;
 		} catch (Exception e) {
 			logger.error("Error while generating mobile wifi VSD: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	private VirtualSensorDescriptionFile generateMobileNetworkVS(String deviceId) {
+		String vsName = null;
+		if(currentDeviceLabel == null || currentDeviceLabel.isEmpty()) {
+			vsName = deviceId;
+		} else {
+			vsName = currentDeviceLabel;
+		}
+		
+		try {
+			VirtualSensorDescriptionFile vs = new VirtualSensorDescriptionFile();
+			vs.setVSName("mobilenetwork_" + vsName);
+			vs.setProcessingClass("hr.fer.rasip.mobile.MobileNetwork");
+			vs.addInitParam("delimiter", networkDelimiter);
+			vs.addInitParam("device-id", deviceId);
+			vs.addInitParam("device-id-delimiter", deviceIdDelimiter);
+			vs.addOutputStructureField("network_type", "VARCHAR(50)");
+			vs.addOutputStructureField("sim_country", "VARCHAR(50)");
+			vs.addOutputStructureField("operator", "VARCHAR(50)");
+			vs.setHistorySize("100");
+			vs.addStream("stream1");
+			vs.addSource("stream1", "mobile");
+			vs.setSamplingRate("stream1", "mobile", 1);
+			vs.setStorageSize("stream1", "mobile", 1);
+			vs.addAddress("stream1", "mobile", "local");
+			vs.addAddressPredicate("stream1", "mobile", "local", "name", "mobile_service");
+			return vs;
+		} catch (Exception e) {
+			logger.error("Error while generating mobile network VSD: " + e.getMessage());
 			return null;
 		}
 	}
