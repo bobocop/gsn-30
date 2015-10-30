@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.io.StringWriter;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,7 +15,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamResult;
 import org.xml.sax.SAXException;
+import javax.xml.transform.dom.DOMSource;
 
 import gsn.beans.AddressBean;
 import gsn.beans.DataField;
@@ -91,6 +97,8 @@ public class YahooWeather2 extends AbstractWrapper {
 			
 			HttpURLConnection conn = null;
 			InputStream in = null;
+			Document doc = null;
+			String data = null;
 			
 			try {
 				Thread.sleep(samplingRate);
@@ -105,7 +113,14 @@ public class YahooWeather2 extends AbstractWrapper {
 				
 				in = conn.getInputStream();
 				
-				Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
+				doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
+				DOMSource domSource = new DOMSource(doc);
+				StringWriter writer = new StringWriter();
+				StreamResult result = new StreamResult(writer);
+				TransformerFactory tf = TransformerFactory.newInstance();
+				Transformer transformer = tf.newTransformer();
+				transformer.transform(domSource, result);
+				data = writer.toString();
 				
 				postStreamElement(new Serializable[] { 
 						Integer.parseInt(((Element) doc.getDocumentElement()
@@ -123,6 +138,12 @@ public class YahooWeather2 extends AbstractWrapper {
 				logger.error(e.getMessage(), e);
 			} catch (ParserConfigurationException e) {
 				logger.error(e.getMessage(), e);
+			} catch (NullPointerException e) {
+				logger.error(e.getMessage(), e);
+				logger.error(data);
+			} catch (TransformerException e) {
+				logger.error(e.getMessage(), e);
+				logger.error(data);
 			} finally {
 				if (conn != null) {
 					conn.disconnect();
