@@ -224,6 +224,13 @@ public class GSNConnectionHTTP extends GSNConnection {
         }
     }
 
+    /**
+     * Reading image from connection - Base64 encoded
+     * @param url - URL to image
+     * @param authorization - username:password Base64 encoded
+     * @return String of Base64 encoded image
+     * @throws EndymionException
+     */
     protected String readImageFromConnection (URL url, String authorization) throws EndymionException {
         try {
 
@@ -241,6 +248,13 @@ public class GSNConnectionHTTP extends GSNConnection {
 
     }
 
+    /**
+     * Method which establishes connection
+     * @param url - connection
+     * @param authorization - username:password Base64 encoded
+     * @return InputStream from connection
+     * @throws Exception
+     */
     protected InputStream establishConnection (URL url, String authorization) throws Exception {
         HttpURLConnection connection = getConnection(url);
         connection.setRequestMethod("GET");
@@ -262,6 +276,12 @@ public class GSNConnectionHTTP extends GSNConnection {
         return "http";
     }
 
+    /**
+     * Gets HTTPUrlConnection object
+     * @param url - URL object
+     * @return - HTTPConnection object
+     * @throws Exception
+     */
     protected HttpURLConnection getConnection (URL url) throws Exception {
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setConnectTimeout(60000); // timeouts after a minute

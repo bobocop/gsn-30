@@ -4,7 +4,7 @@ import endymion.exception.EndymionException;
 import endymion.logger.EndymionLoggerEnum;
 
 /**
- * Created by Nikola on 17.04.2015.
+ * Helper class - used for debugging only
  */
 public class GSNAlarmSenderStdout extends GSNAlarmSender {
 

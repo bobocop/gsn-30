@@ -309,6 +309,13 @@ public class GSNDataCollector {
 
     }
 
+    /**
+     * Method which limits the number of data entries
+     * @param sensor - object containg data
+     * @param sampling_rate - projected percentage of data which will be left after processing
+     * @return - sensor object with all or less data if the limit is reached
+     * @throws EndymionException
+     */
     protected GSNSensor limitNumberOfDataEntries (GSNSensor sensor, double sampling_rate) throws EndymionException {
 
         String field = sensor.getDataFields().get(0);
@@ -370,6 +377,12 @@ public class GSNDataCollector {
         return sensor;
     }
 
+    /**
+     * Helper function for fetching images
+     * @param connection - connection object
+     * @param sensor - sensor containg data
+     * @return
+     */
     protected GSNSensor fetchImages (GSNConnection connection, GSNSensor sensor) {
 
         for (String field : sensor.getDataFields()) {
@@ -386,6 +399,11 @@ public class GSNDataCollector {
         return sensor;
     }
 
+    /**
+     * Helper method for fetching images
+     * @param connection - connection object
+     * @param sensorData - data which contains URL to an image
+     */
     protected void fetchImage (GSNConnection connection, GSNSensorData sensorData) {
 
         for (String timestamp : sensorData.getTimeAndValue().keySet()) {
@@ -415,6 +433,11 @@ public class GSNDataCollector {
         }
     }
 
+    /**
+     * Helper function for debugging
+     * @param sensor
+     * @return
+     */
     private String outputSensorData (GSNSensor sensor) {
 
         StringBuilder builder = new StringBuilder();

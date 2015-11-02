@@ -12,6 +12,7 @@ import endymion.processor.data.GSNStorageElement;
 import endymion.sensor.GSNConfigurationSensor;
 import endymion.sensor.GSNSensor;
 import endymion.sensor.data.GSNSensorData;
+import endymion.storage.GSNStorageManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +59,8 @@ public class GSNDataCollectorMain {
 
     EndymionTimestampManager timestampManager;
 
+    GSNStorageManager storageManager = null;
+
 
     /**
      * The constructor - instantiates all subsystems
@@ -80,6 +83,9 @@ public class GSNDataCollectorMain {
      */
     public void initialize () throws Exception {
         configurationManager.readConfiguration();
+        if (configurationManager.useOwnStorage()) {
+            initializeStorage();
+        }
         logger = EndymionLoggerManager.getLoggerManager();
         initializeAlarms();
         setupConnection();
@@ -119,6 +125,13 @@ public class GSNDataCollectorMain {
             Collections.sort(storageElements);
             //outputStorageElements(storageElements);
         }
+
+        if (storageManager != null && !storageElements.isEmpty()) {
+            storageManager.storeDataElements(storageElements);
+            storageElements.clear();
+        }
+
+
 
     }
 
@@ -383,6 +396,15 @@ public class GSNDataCollectorMain {
 
             configurationSensor.setSampling_rate(Double.parseDouble(value));
         }
+    }
+
+    private void initializeStorage() throws EndymionException {
+        String url = configurationManager.getConfigurationParameter("storage", "url");
+        String username = configurationManager.getConfigurationParameter("storage", "username");
+        String password = configurationManager.getConfigurationParameter("storage", "password");
+
+        storageManager = new GSNStorageManager(url, username, password);
+        storageManager.initializeStorage();
     }
 
 }

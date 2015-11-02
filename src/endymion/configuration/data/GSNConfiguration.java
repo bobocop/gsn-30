@@ -101,21 +101,68 @@ public abstract class GSNConfiguration {
      */
     public abstract void setConfigurationParameter (String... keys) throws EndymionException;
 
+    /**
+     * Getter for vSensors
+     * @return list of vSensor names from settings
+     */
     public abstract List <String> getVSensors ();
 
+    /**
+     * Getter for alarms
+     * @return list of GSN alarms
+     */
     public abstract List <String> getAlarms ();
 
+    /**
+     * Getter for sensor fields
+     * @param sensor - sensor name
+     * @return field names of sensor
+     * @throws EndymionException
+     */
     public abstract List <String> getSensorFields (String sensor) throws EndymionException;
 
+    /**
+     * Getter for alarms
+     * @param sensor - sensor name
+     * @return list of vSensor alarms
+     * @throws EndymionException
+     */
     public abstract List <String> getAlarms (String sensor) throws EndymionException;
 
+    /**
+     * Method for adding vSensor and its parameters
+     * @param vSensor - sensor name
+     * @param parameters - sensor configuration parameters
+     * @throws EndymionException
+     */
     public abstract void addVSensor (String vSensor, HashMap <String, String> parameters) throws EndymionException;
 
+    /**
+     * Method for adding field and tis parameters
+     * @param vSensor - sensor name
+     * @param parameters - field configuration parameters
+     * @throws EndymionException
+     */
     public abstract void addField (String vSensor, HashMap<String, String> parameters) throws EndymionException;
 
+    /**
+     * Method for adding alarm to vSensor
+     * @param vSensor - sensor name
+     * @param alarmName - alarm name
+     * @param parameters - alarm parameters
+     * @param sendToList - list of addresses to send alarm to
+     * @throws EndymionException
+     */
     public abstract void addAlarm (String vSensor, String alarmName, HashMap<String, String> parameters, List<String> sendToList)
             throws EndymionException;
 
+    /**
+     * Method for adding alarm to GSN
+     * @param alarmName - alarm name
+     * @param parameters - alarm parameters
+     * @param sendToList - list of addresses to send alarm to
+     * @throws EndymionException
+     */
     public abstract void addAlarm (String alarmName, HashMap<String, String> parameters, List<String> sendToList)
             throws EndymionException;
 }

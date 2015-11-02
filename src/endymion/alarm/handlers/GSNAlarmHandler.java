@@ -143,6 +143,10 @@ public abstract class GSNAlarmHandler {
      */
     public abstract String getVSensor ();
 
+    /**
+     * Setter for lastSentTimestamp
+     * @param lastSentTimestamp
+     */
     protected void setLastSentTimestamp (String lastSentTimestamp) {
         this.lastSentTimestamp = lastSentTimestamp;
     }

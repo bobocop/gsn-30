@@ -88,10 +88,18 @@ public class GSNConfigurationAlarm {
         }
     }
 
+    /**
+     * Method for adding recipient of alarm
+     * @param sendTo
+     */
     public void addSendTo (String sendTo) {
         this.sendToList.add(sendTo);
     }
 
+    /**
+     * Getter for recipient list
+     * @return list of recipient
+     */
     public List<String> getSendToList() {
         return sendToList;
     }

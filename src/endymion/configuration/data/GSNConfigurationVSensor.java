@@ -9,13 +9,28 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Nikola on 28.02.2015.
+ * Class that represents vSensor configuration
  */
 public class GSNConfigurationVSensor {
 
+    /**
+     * Sensor name
+     */
     protected String name;
+
+    /**
+     * Sensor configuration parameters
+     */
     HashMap<String, String> parameters;
+
+    /**
+     * List of field object
+     */
     List <GSNConfigurationField> fields;
+
+    /**
+     * List of alarm objects
+     */
     List <GSNConfigurationAlarm> alarms;
 
     private final int VSENSOR_PARAM_NUMBER = 2;
@@ -30,6 +45,10 @@ public class GSNConfigurationVSensor {
     private final int FIELD_READ_PARAM_NUMBER = 3;
     private final int ALARM_READ_PARAM_NUMBER = FIELD_READ_PARAM_NUMBER;
 
+    /**
+     * Constructor
+     * @param name - sensor name
+     */
     public GSNConfigurationVSensor (String name) {
         this.name = name;
         parameters = new HashMap<String, String>();
@@ -37,14 +56,28 @@ public class GSNConfigurationVSensor {
         alarms = new ArrayList<GSNConfigurationAlarm>();
     }
 
+    /**
+     * Getter for name
+     * @return - sensor name
+     */
     public String getName () {
         return name;
     }
 
+    /**
+     * Setter for sensor name
+     * @param name
+     */
     public void setName (String name) {
         this.name = name;
     }
 
+    /**
+     * Getter for parameters for vSensor, alarm and field
+     * @param keys - list of keys for fetching parameter
+     * @return - parameter value
+     * @throws EndymionException
+     */
     public String getParameter (String... keys) throws EndymionException {
         if (keys.length == VSENSOR_READ_PARAM_NUMBER) {
             return parameters.get(keys[0]);
@@ -59,6 +92,11 @@ public class GSNConfigurationVSensor {
         }
     }
 
+    /**
+     * Setter for parameters
+     * @param params - keys + parameter value
+     * @throws EndymionException
+     */
     public void setParameters (String... params) throws EndymionException {
 
         if (params.length == VSENSOR_PARAM_NUMBER && !params[0].equalsIgnoreCase(FIELD_ID)
@@ -88,6 +126,12 @@ public class GSNConfigurationVSensor {
         }
     }
 
+    /**
+     * Getter for field object by name
+     * @param name - field name
+     * @return field configuration object
+     * @throws EndymionException
+     */
     protected GSNConfigurationField getFieldByName (String name) throws EndymionException {
 
         for (GSNConfigurationField field : fields) {
@@ -99,6 +143,12 @@ public class GSNConfigurationVSensor {
         throw new EndymionException("No field with name: " + name, EndymionLoggerEnum.WARNING);
     }
 
+    /**
+     * Getter for alarm object by name
+     * @param name - alarm name
+     * @return - alarm object
+     * @throws EndymionException
+     */
     protected GSNConfigurationAlarm getAlarmByName (String name) throws EndymionException {
 
         for (GSNConfigurationAlarm alarm : alarms) {
@@ -110,6 +160,10 @@ public class GSNConfigurationVSensor {
         throw new EndymionException("No alarm with name " + name, EndymionLoggerEnum.WARNING);
     }
 
+    /**
+     * Getter for fields
+     * @return list of field names
+     */
     public List <String> getAllFields () {
         List<String> fieldsS = new ArrayList<String>();
 
@@ -120,6 +174,10 @@ public class GSNConfigurationVSensor {
         return fieldsS;
     }
 
+    /**
+     * Getter for alarms
+     * @return list of alarm names
+     */
     public List <String> getAllAlarms () {
         List<String> alarmsS = new ArrayList<String>();
 

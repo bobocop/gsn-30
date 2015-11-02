@@ -98,6 +98,10 @@ public class GSNConfigurationItem extends GSNConfiguration {
         }
     }
 
+    /**
+     * Getter for alarms
+     * @return - list of alarm names
+     */
     public List<String> getAlarms () {
         List<String> alarmsS = new ArrayList<String>();
 
@@ -108,6 +112,10 @@ public class GSNConfigurationItem extends GSNConfiguration {
         return alarmsS;
     }
 
+    /**
+     * Getter for vSensors
+     * @return - list of sensor names
+     */
     @Override
     public List<String> getVSensors() {
         List<String> VSensorsS = new ArrayList<String>();
@@ -119,18 +127,36 @@ public class GSNConfigurationItem extends GSNConfiguration {
         return VSensorsS;
     }
 
+    /**
+     * Getter for sensor fields
+     * @param sensor - sensor name
+     * @return - sensor field names
+     * @throws EndymionException
+     */
     @Override
     public List<String> getSensorFields(String sensor) throws EndymionException{
         GSNConfigurationVSensor vSensor = getVSensorByName(sensor);
         return vSensor.getAllFields();
     }
 
+    /**
+     * Getter for alarms
+     * @param sensor - sensor name
+     * @return - list of vSensor alarms
+     * @throws EndymionException
+     */
     @Override
     public List<String> getAlarms(String sensor) throws EndymionException {
         GSNConfigurationVSensor vSensor = getVSensorByName(sensor);
         return vSensor.getAllAlarms();
     }
 
+    /**
+     * Method for adding vSensor
+     * @param vSensor - sensor name
+     * @param parameters - sensor configuration parameters
+     * @throws EndymionException
+     */
     @Override
     public void addVSensor(String vSensor, HashMap<String, String> parameters) throws EndymionException{
 
@@ -145,6 +171,12 @@ public class GSNConfigurationItem extends GSNConfiguration {
         vSensors.add(vSensorObject);
     }
 
+    /**
+     * Method for adding field
+     * @param vSensor - sensor name
+     * @param parameters - field configuration parameters
+     * @throws EndymionException
+     */
     @Override
     public void addField(String vSensor, HashMap<String, String> parameters) throws EndymionException{
         GSNConfigurationVSensor vSensorObject = getVSensorByName(vSensor);
@@ -156,6 +188,14 @@ public class GSNConfigurationItem extends GSNConfiguration {
         vSensorObject.setParameters(FIELD_ID, parameters.get("name"));
     }
 
+    /**
+     * Method for adding alarm for vSensor
+     * @param vSensor - sensor name
+     * @param alarmName - alarm name
+     * @param parameters - alarm parameters
+     * @param sendToList - list of addresses to send alarm to
+     * @throws EndymionException
+     */
     @Override
     public void addAlarm(String vSensor, String alarmName, HashMap<String, String> parameters, List<String> sendToList) throws EndymionException {
         GSNConfigurationVSensor vSensorObject = getVSensorByName(vSensor);
@@ -175,6 +215,13 @@ public class GSNConfigurationItem extends GSNConfiguration {
         }
     }
 
+    /**
+     * Method for adding alarms for GSN
+     * @param alarmName - alarm name
+     * @param parameters - alarm parameters
+     * @param sendToList - list of addresses to send alarm to
+     * @throws EndymionException
+     */
     @Override
     public void addAlarm(String alarmName, HashMap<String, String> parameters, List<String> sendToList) throws EndymionException {
         if (getAlarms().contains(alarmName)) {
@@ -189,6 +236,12 @@ public class GSNConfigurationItem extends GSNConfiguration {
         alarms.add(alarm);
     }
 
+    /**
+     * Getter for sensor object by name
+     * @param name - sensor name
+     * @return - sensor configuration object
+     * @throws EndymionException
+     */
     protected GSNConfigurationVSensor getVSensorByName (String name) throws EndymionException {
         for (GSNConfigurationVSensor vSensor : vSensors) {
             if (vSensor.getName().equalsIgnoreCase(name)) {
@@ -199,6 +252,12 @@ public class GSNConfigurationItem extends GSNConfiguration {
         throw new EndymionException("No sensor with name: " + name + " in GSN " + this.getID(), EndymionLoggerEnum.WARNING);
     }
 
+    /**
+     * Getter for alarm object by name
+     * @param name - alarm name
+     * @return - alarm configuration object
+     * @throws EndymionException
+     */
     protected GSNConfigurationAlarm getAlarmByName (String name) throws EndymionException {
         for (GSNConfigurationAlarm alarm : alarms) {
             if (alarm.getName().equalsIgnoreCase(name)) {

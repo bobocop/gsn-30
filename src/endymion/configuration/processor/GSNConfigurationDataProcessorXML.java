@@ -2,6 +2,7 @@ package endymion.configuration.processor;
 
 import endymion.configuration.data.GSNConfiguration;
 import endymion.configuration.data.GSNConfigurationItem;
+import endymion.configuration.data.GSNStorageConfiguration;
 import endymion.exception.EndymionException;
 import endymion.logger.EndymionLoggerEnum;
 import org.w3c.dom.*;
@@ -17,6 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Created by Nikola on 26.02.2015.
+ * Configuration data processor for XML configuration
  */
 public class GSNConfigurationDataProcessorXML extends GSNConfigurationDataProcessor {
 
@@ -28,10 +30,12 @@ public class GSNConfigurationDataProcessorXML extends GSNConfigurationDataProces
         Node rootItem = buildDOM(configuration.get(0));
 
         for (Node gsn = rootItem.getFirstChild(); gsn != null; gsn = gsn.getNextSibling()) {
-            configurations.add(createGSNConfiguration(gsn));
+            if (gsn.getNodeName().equals("gsn"))
+                configurations.add(createGSNConfiguration(gsn));
+            else if (gsn.getNodeName().equals("storage")) {
+                configurations.add(createStorageConfiguration(gsn));
+            }
         }
-
-
 
         return configurations;
     }
@@ -198,6 +202,18 @@ public class GSNConfigurationDataProcessorXML extends GSNConfigurationDataProces
 
 
         }
+    }
+
+    protected GSNConfiguration createStorageConfiguration (Node storage) {
+
+        NamedNodeMap attributes = storage.getAttributes();
+
+        String ipAddress = attributes.getNamedItem("url").getNodeValue();
+        String username = attributes.getNamedItem("username").getNodeValue();
+        String password = attributes.getNamedItem("password").getNodeValue();
+
+        return new GSNStorageConfiguration(ipAddress, username, password);
+
     }
 }
 

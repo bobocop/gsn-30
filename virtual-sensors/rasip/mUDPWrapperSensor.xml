@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><virtual-sensor name="mUDPWrapper" priority="10">
+	<processing-class>
+		<class-name>gsn.vsensor.BridgeVirtualSensor</class-name>
+		<output-structure>
+		<field name="data" type="VARCHAR(1024)"/></output-structure>
+	</processing-class>	
+	<description/>
+	<life-cycle pool-size="10"/>
+	<addressing/>	
+	<storage history-size="5m"/>
+	<streams>
+		<stream name="input1">
+			<source alias="source1" sampling-rate="1" storage-size="1">
+				<address wrapper="mUDPWrapper"><predicate key="port">20156</predicate></address>
+				<query>select * from wrapper</query>
+			</source>
+			<query>select * from source1</query>
+		</stream>
+	</streams>
+</virtual-sensor>

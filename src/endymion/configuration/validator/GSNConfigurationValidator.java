@@ -2,6 +2,7 @@ package endymion.configuration.validator;
 
 import java.util.Arrays;
 import endymion.configuration.data.GSNConfiguration;
+import endymion.configuration.data.GSNStorageConfiguration;
 import endymion.exception.EndymionException;
 import endymion.logger.EndymionLoggerEnum;
 
@@ -15,6 +16,10 @@ public class GSNConfigurationValidator {
     private static final List<String> allowedConnectionTypes = Arrays.asList("http", "https");
 
     public void validateGSNConfiguration (GSNConfiguration configuration) throws EndymionException {
+
+        if (configuration.getID().equals(GSNStorageConfiguration.STORAGE_ID)) {
+            return;
+        }
 
         checkConnectionType(configuration);
         checkReadParameter(configuration);

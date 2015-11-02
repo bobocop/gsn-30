@@ -253,6 +253,13 @@ public class GSNConnectionDataProcessorXML extends GSNConnectionDataProcessor {
         return document.getDocumentElement();
     }
 
+    /**
+     * Method which formats date
+     * @param fields - attribute names
+     * @param values - attribute values
+     * @return String which contains formatted date in dateFormat
+     * @throws EndymionException
+     */
     protected String getFormattedDate (List<String> fields, List<String> values) throws EndymionException {
 
         for (int i = 0; i < fields.size(); ++i) {

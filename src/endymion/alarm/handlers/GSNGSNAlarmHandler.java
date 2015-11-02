@@ -138,6 +138,10 @@ public class GSNGSNAlarmHandler extends GSNAlarmHandler {
         return GSNTimeManager.getTimeManager().getLastTimestamp(GSNId);
     }
 
+    /**
+     * Setter for lastSentTimestamp - timestamp is stored
+     * @param lastSentTimestamp
+     */
     protected void setLastSentTimestamp (String lastSentTimestamp) {
         this.lastSentTimestamp = lastSentTimestamp;
         EndymionTimestampManager.getTimestampManager().setTimestampAlarm(GSNId, alarmName, this.lastSentTimestamp);
