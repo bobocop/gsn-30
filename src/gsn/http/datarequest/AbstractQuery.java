@@ -63,7 +63,9 @@ public class AbstractQuery {
 				if (aggregation != null)	partFields.append(") as " + fields[i]);
 
 			}
-
+			
+			// useless field
+			/*
 			if (aggregation != null) {
 				if (partFields.length() > 0) {
 					partFields.append(", ");
@@ -71,7 +73,8 @@ public class AbstractQuery {
 				partFields.append("floor(timed/" + aggregation.getTimeRange() + ") as aggregation_interval ");
 			}
 			else partFields.append(" ");
-
+			*/
+			partFields.append(" ");
 
 			// Build a final query
 			StringBuilder sqlQuery = new StringBuilder();
@@ -80,7 +83,7 @@ public class AbstractQuery {
 			sqlQuery.append("from ").append(vsName).append(" ");
 			sqlQuery.append(partStandardCriteria);
 			if (aggregation == null)	sqlQuery.append("order by timed desc ");
-			else 								sqlQuery.append("group by aggregation_interval desc ");
+			else 								sqlQuery.append("group by floor(timed/" + aggregation.getTimeRange() + ") order by timed desc");
 
 			logger.debug("SQL Query built >" + sqlQuery.toString() + "<");
         return sqlQuery;
