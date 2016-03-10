@@ -15,7 +15,8 @@ var app = angular.module('gsnClientApp', [
   'gridster',
   'multi-select',
   'highcharts-ng',
-  'mm.foundation'
+  'mm.foundation',
+  'angularMoment'
 ]);
 
 
