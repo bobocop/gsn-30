@@ -12,9 +12,9 @@ angular.module('gsnClientApp')
       for (var j = 0; j < nValues; j++)
       {
         allData[j] = new Array();
-        valueNames[j] = sensorResult.header[j];
+        valueNames[j] = sensorResult.header[j] + " [" + sensorResult.name + "]";
       }
-	  
+	  /*
 	  if (Object.prototype.toString.call(fromDate) === "[object Date]" && Object.prototype.toString.call(untilDate) === "[object Date]") {
 		   
 		  for(var i = 0; i <= sensorResult.tuples.length -1; ++i) {
@@ -25,16 +25,16 @@ angular.module('gsnClientApp')
 			}
 		  }
 		}
-
+		*/
       for(var i = 0; i <= sensorResult.tuples.length - 1; ++i)
       {
         var data = sensorResult.tuples[i];
         var date = data[sensorResult.header[nValues]].substring(0,10).split("-");
         var time = data[sensorResult.header[nValues]].substring((data[sensorResult.header[nValues]].indexOf("T") + 1),
-                                                                (data[sensorResult.header[nValues]].indexOf("T") + 7)).split(":");
+                                                                (data[sensorResult.header[nValues]].indexOf("T") + 9)).split(":");
         //var time = data[sensorResult.header[nValues]].substring(11,19).split(":");
         //var firstDate = new Date(Date.UTC(date[0], date[1], date[2], time[0], time[1]));
-        var firstDate = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
+        var firstDate = new Date(date[0], date[1]-1, date[2], time[0], time[1], time[2]);
 
         for (var j = 0; j < nValues; j++)
         {     
