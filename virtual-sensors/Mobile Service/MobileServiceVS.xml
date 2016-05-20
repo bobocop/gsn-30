@@ -29,7 +29,7 @@
 			<!--param name="weather-file-name"></param-->
 			<!--param name="light-prox-file-name"></param-->
 			<!--param name="magnetic-field-file-name"></param-->
-			<!--param name="bluetooth-garmin-file-name"></param-->
+			<!--param name="garmin-file-name"></param-->
 		</init-params>
 		<output-structure>
 			<field name="active_devices" type="VARCHAR(500)"/>
